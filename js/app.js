@@ -462,9 +462,9 @@ Tex.controller('texCtrl', function ($scope, es, $sce) {
             index: "yelp"
         });
         
-        if (sessionStorage.getItem("user")) {
-            $scope.security.user = sessionStorage.getItem("user");
-            $scope.security.password = sessionStorage.getItem("password");
+        if (sessionStorage.getItem("user") || true) {
+            $scope.security.user = ""; //sessionStorage.getItem("user");
+            $scope.security.password = ""; // = sessionStorage.getItem("password");
             $scope.login();
         }
         $scope.config = {};
