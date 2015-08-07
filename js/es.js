@@ -422,7 +422,7 @@ ES.factory('es', function (esFactory) {
                 aggs: {}
             };
             
-        exclude.join("|");
+        exclude = exclude.join("|");
             
         if (type === 'bigrams') {
             size = 20;
