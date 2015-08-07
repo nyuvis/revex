@@ -25,7 +25,7 @@
     <script src="js/facets.js"></script>
 </head>
 <body ng-controller="texCtrl" ng-init="init()">
-   <div class="loading" ng-hide="logged" id="initialSplash" style="display:block; z-index: 1000; opacity:1">
+   <div class="loading" ng-hide="true" id="initialSplash" style="display:block; z-index: 1000; opacity:1">
       <img src="images/logo.png">{{logged}} <br><br>
        Password: <input type="password" ng-model="security.password" ng-enter="login()"> <button ng-click="login()">Load</button> <br>
        <span style="color:red">{{security.status}}</span>
