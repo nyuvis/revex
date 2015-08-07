@@ -24,8 +24,8 @@ Tex.controller('texCtrl', function ($scope, es, $sce) {
     
     $scope.facets = [
         {order: 1, title: "Rating", field: "review.rating", directive: "rating"},
-        {order: 2, title: "NumReviews", field: "business.review_count", directive: "numReviews", 
-            script: "doc['business.review_count'].value > 5 ? (doc['business.review_count'].value > 10 ?              (doc['business.review_count'].value > 100 ? '>100' : '>10') : '>5') : doc['business.review_count'].value"},
+       // {order: 2, title: "NumReviews", field: "business.review_count", directive: "numReviews", 
+    //        script: "doc['business.review_count'].value > 5 ? (doc['business.review_count'].value > 10 ?              (doc['business.review_count'].value > 100 ? '>100' : '>10') : '>5') : doc['business.review_count'].value"},
         {order: 3, title: "Provider", field: "business.name", directive: "provider"},
         {order: 4, title: "Category", field: "business.category", directive: "provider"},
         {order: 5, title: "State", field: "business.state", directive: "provider"}
