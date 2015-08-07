@@ -463,8 +463,8 @@ Tex.controller('texCtrl', function ($scope, es, $sce) {
         });
         
         if (sessionStorage.getItem("user") || true) {
-            $scope.security.user = ""; //sessionStorage.getItem("user");
-            $scope.security.password = ""; // = sessionStorage.getItem("password");
+            $scope.security.user = "1234"; //sessionStorage.getItem("user");
+            $scope.security.password = "1234"; // = sessionStorage.getItem("password");
             $scope.login();
         }
         $scope.config = {};
