@@ -47,10 +47,10 @@ Tex.controller('texCtrl', function ($scope, es, $sce) {
         {order: 6, title: "Courteous Staff", field: "review.CourteousStaff", directive: "rating", noSignificant: true},
         {order: 7, title: "Follows Up After Visit", field: "review.FollowsUpAfterVisit", directive: "rating", noSignificant: true},
         {order: 8, title: "Specialty", field: "review.Specialty", directive: "provider"},
-        {order: 9, title: "Degree", field: "review.Degree", directive: "provider"},
-        {order: 10, title: "AverageWaitTime", field: "review.AverageWaitTime", directive: "provider"},
-        {order: 11, title: "Name", field: "review.name", directive: "provider"},
-        {order: 12, title: "State", field: "review.State", directive: "provider"}
+        {order: 9, title: "Degree", field: "business.Degree", directive: "provider"},
+        {order: 10, title: "AverageWaitTime", field: "business.AverageWaitTime", directive: "provider"},
+        {order: 11, title: "Name", field: "business.name", directive: "provider"},
+        {order: 12, title: "State", field: "business.State", directive: "provider"}
     
         
     ];
