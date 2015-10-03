@@ -13,6 +13,17 @@ body ul {
 body em {
   font-weight: 700;
 }
+#about {
+  right: 200px;
+  top: 20px;
+  position: absolute;
+  right: 250px;
+  top: 13px;
+  z-index: 100;
+}
+#about a {
+  color: #0088cc !important;
+}
 #SearchBar {
   position: fixed;
   left: 0px;
