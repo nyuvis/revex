@@ -13,6 +13,9 @@ body ul {
 body em {
   font-weight: 700;
 }
+.multiSelect {
+  text-align: left;
+}
 #about {
   right: 200px;
   top: 20px;
@@ -283,6 +286,15 @@ body em {
   margin: 0px;
   border-bottom: solid 1px #e3e4e5;
 }
+.facet .line {
+  user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+}
+.facet .line.selected {
+  background-color: #ccc;
+}
 .suggestions {
   min-height: 10px;
 }
@@ -314,6 +326,10 @@ body em {
 }
 .facet-provider .label {
   text-align: left;
+  user-select: none;
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
 }
 .facet-provider .bar {
   margin: 0px;

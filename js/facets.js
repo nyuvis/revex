@@ -1,4 +1,12 @@
 /*global Tex, d3, console, Utils, topojson*/
+var selecting = {};
+document.documentElement.onkeyup = function(a,b,c) {
+    if(a.keyCode === 16) {
+        if(selecting.active) {
+            selecting.done();
+        }
+    }
+}
 
 var percentColor = function (value) {
         'use strict';
@@ -34,7 +42,25 @@ var facets = {
                 .append("tr")
                 .attr("class", "line")
                 .on("click", function (d) {
-                    facet.onSelect(d, data);
+                    
+                    
+                    d._selected = d._selected ? false : true;
+                    d3.select(this).classed("selected", d._selected);
+                    if(d3.event.shiftKey){
+                        d3.event.preventDefault();
+                        selecting = { active: true, done: function() { 
+                            var selecteds = data.data.filter(function(f) { return f._selected; });
+                            selecting = {};
+                            facet.onSelect(d, data, selecteds);
+                        }}
+                    }else {
+                        var selecteds = data.data.filter(function(f) { return f._selected; });
+                        selecting = {};
+                        facet.onSelect(d, data, selecteds);
+                    }
+                    
+                    
+                    
                 });
             header.append("th").text("");
             
@@ -209,7 +235,9 @@ var facets = {
             lines.append("td")
                 .attr("class", "value")
                 .text(function (d) {return " " + d.doc_count; });
+            
             header.append("th").text("");
+            
             footer = table.append("tr").attr("class", "footer");
             footer.append("td").text("");
             if (data.maxPercent) {
@@ -250,9 +278,24 @@ var facets = {
                 .append("tr")
                 .attr("class", "line")
                 .on("click", function (d) {
-                    facet.onSelect(d, data);
+                    d._selected = d._selected ? false : true;
+                    d3.select(this).classed("selected", d._selected);
+                    if(d3.event.shiftKey){
+                        d3.event.preventDefault();
+                        selecting = { active: true, done: function() { 
+                            var selecteds = data.data.filter(function(f) { return f._selected; });
+                            selecting = {};
+                            facet.onSelect(d, data, selecteds);
+                        }}
+                    }else {
+                        var selecteds = data.data.filter(function(f) { return f._selected; });
+                        selecting = {};
+                        facet.onSelect(d, data, selecteds);
+                    }
+                }).on("keyup", function (d) {
+                    console.log(d);
                 });
-            header.append("th").text("");
+            header.append("th").attr("class", "multiSelect").append("a").attr("href", "#").text("Select...");
             
             lines.append("td")
                 .attr("class", "label")
@@ -340,7 +383,9 @@ var facets = {
         facet.build = function () {
             facet.title.append("span").attr("class", "maxFacet")
                 .style("font-weight", "bold")
-                .html('<div style="background-color:' + facet.colors.countDis(data.max) + '"></div>' + data.max + " " +
+                .html('<div style="background-color:' 
+                      + facet.colors.countDis(data.max) 
+                      + '"></div>' + data.max + " " +
                       (data.maxPercent ? ('<div style="background-color:' + facet.colors.percentDis(data.maxPercent) + '"></div>' + (data.maxPercent * 100).toFixed(2) + "%") : ""));
             buildTable();
         };
@@ -615,8 +660,8 @@ Tex.directive("facet", function () {
                     build: function () {
                         facet.board.append('div').text('todo');
                     },
-                    onSelect: function (d, facet) {
-                        scope.$parent.$parent.addFacetFilter(d, facet);
+                    onSelect: function (d, facet, multiples) {
+                        scope.$parent.$parent.addFacetFilter(d, facet, multiples);
                     },
                     showToolTip: function (text) {
                         scope.$parent.$parent.showToolTip(text);

@@ -19,6 +19,9 @@ body{
         font-weight: 700;
     }
 }
+.multiSelect {
+    text-align: left;
+}
 
 #about{
     position: absolute;
@@ -310,6 +313,15 @@ body{
         margin: 0px;
         border-bottom: solid 1px @Divider;
     }
+    .line {
+        user-select: none;
+        -moz-user-select: -moz-none;
+       -khtml-user-select: none;
+       -webkit-user-select: none;
+    }
+    .line.selected {
+        background-color: #ccc;
+    }
 }
 .suggestions{
     h3{
@@ -345,6 +357,10 @@ body{
     }
     .label{
         text-align: left;
+        user-select: none;
+        -moz-user-select: -moz-none;
+       -khtml-user-select: none;
+       -webkit-user-select: none;
     }
     .bar{
         margin: 0px;
@@ -369,6 +385,7 @@ body{
     .base{
         max-height: 200px;
         overflow-x: auto;
+        
     }
     h1{
         span{

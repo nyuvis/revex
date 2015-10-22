@@ -95,9 +95,13 @@ Tex.controller('texCtrl', function ($scope, es, $sce) {
         _gaq.push(['_trackEvent', 'State', 'Saved', '']);
     };
     
-    $scope.addFacetFilter = function (filter, facet) {
+    $scope.addFacetFilter = function (filter, facet, multiples) {
         $scope.filter.filters = $scope.filter.filters || [];
-        $scope.filter.filters.push({facet: facet.facet, value: [filter.key]});
+        if(multiples) {
+            $scope.filter.filters.push({facet: facet.facet, value: multiples.map(function(f){ return f.key })});
+        } else {
+            $scope.filter.filters.push({facet: facet.facet, value: [filter.key]});
+        }
         $scope.setUrl();
         _gaq.push(['_trackEvent', 'Facet', 'Added', '']);
     };
