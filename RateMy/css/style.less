@@ -1,0 +1,804 @@
+@Primarly: #607D8B;
+@Light: #ECEFF1;
+@Secondary: #FF5722;
+@Text: #4D4D4F;
+@TextLight: #8C8E91;
+@Disabled: #BFC1C3;
+@Divider: #E3E4E5;
+body{
+    margin: 0px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    background-color: #f7f7f7;
+    ul{
+        list-style: none;
+        padding: 0px;
+        margin: 0px;
+    }
+    em{
+        font-weight: 700;
+    }
+}
+.multiSelect {
+    text-align: left;
+}
+
+#about{
+    position: absolute;
+    right: 200px;
+    top: 20px;
+    position: absolute;
+    right: 250px;
+    top: 13px;
+    z-index: 100;
+    a {
+        color: rgb(0, 136, 204) !important;
+    }
+}
+
+@SearchBarHeight: 25px;
+#SearchBar{
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    height: @SearchBarHeight;
+    padding: 10px;
+    padding-left: 10px;
+    padding-top: 5px;
+    border-bottom: solid 1px #ccc;
+    z-index: 6;
+    background-color: white;
+    img{
+        height: 30px;
+        margin-right: 20px;
+    }
+    ul{
+        li{
+            float: left;
+            height: 30px;
+            overflow: hidden;
+                
+        }
+    }
+    
+    h1{
+        display: inline-block;
+        margin: 0px;
+        padding: 0px;
+        font-size: 20px;
+        vertical-align: middle;
+        color: @Primarly;
+        font-weight: 300;
+        margin-right: 20px;
+        margin-top: 4px;
+    }
+    
+    input[type=search]{
+        width: 300px;
+        height: 30px;
+        border: none;
+        border-bottom: solid 1px @Secondary;
+        background-color: @Light + #050505;
+        outline: none;
+        display: inline-block;
+        vertical-align: middle;
+        border-right: none;
+        font-size: 16px;
+    }
+    input[type=search]:focus{
+        box-shadow: 0 0 5px #ccc;
+    }
+    button{
+        height: 30px;
+        background-color: @Primarly;
+        color: white;
+        width: 30px;
+        border: none;
+        outline: none;
+        display: inline-block;
+        border: none;
+    }
+    .Summary{
+        margin-left: 30px;
+        padding-top: 6px;
+    }
+    .filter{
+        font-size: 14px;
+        position: relative;
+        div{
+            position: absolute;
+            background-color: @Secondary;
+            top: 0px;
+            left: 0px;
+            right: 0px;
+            bottom: 0px;
+            opacity: 0.9;
+            color: white;
+            text-align: center;
+            border-radius: 10px;
+            display: none;
+            cursor: pointer;
+        }
+    }
+    .filter:hover {
+        div{
+            display: block;
+        }
+    }
+}
+
+@SummaryHeight: 35px;
+#Summary{
+    position: fixed;
+    left: 0px;
+    right: 0px;
+    height: @SummaryHeight;
+    padding: 5px 10px 5px 10px;
+    top: @SearchBarHeight + 15;
+    box-shadow: 0px 0px 10px #ccc;
+    z-index: 4;
+    background-color: white;
+    text-align: center;
+    h2 {
+        display: inline-block;
+        margin: 0px;
+        font-size: 16px;
+        color: @Primarly;
+        font-weight: 500;
+        padding: 0px;
+    }
+    label{
+        font-size: 12px;
+        color: @Primarly;
+        font-weight: 300;
+    }
+    .stats {
+       position: absolute;
+        text-align: left;
+        line-height: 17px;
+    }
+    .sort{
+        position: absolute;
+        right: 20px;
+        top: 10px;
+    }
+    .histogram{
+        width: 800px;
+        height: 30px;
+        display: inline-block;
+        border: solid 1px #ccc;
+        
+        line{
+            stroke: @Divider;
+            stroke-width: 1;
+        }
+        text{
+            font-size: 9px;
+        }
+        .extent{
+            fill: @Primarly;
+            fill-opacity: 0.2;
+            height: 9px;
+            y: 21px;
+        }
+        .resize{
+            visibility: visible;
+        }
+        .controls{
+            display: block;
+            float: left;
+            width: 5px;
+            font-size: 11px;
+            margin-bottom: 2px;
+            text-align: center;
+            width: 20px;
+            background-color: @Light;
+            
+            span{
+                cursor: pointer;
+                text-align: center;
+                display: block;
+            }
+            .selected {
+                    background-color: @Primarly;
+                    color: white;
+                }
+        }
+    }      
+}
+#Data{
+    position: fixed;
+    top: @SearchBarHeight + @SummaryHeight + 20;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: white;
+    max-width: 1424px;
+    margin: auto;
+    box-shadow: 0px 0px 5px #ccc;
+}
+@FacetsWidth: 310px;
+#Facets{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    width: @FacetsWidth;
+    padding-top: 5px;
+    overflow-x: auto;
+}
+#DocumentsList{
+    position: absolute;
+    left: @FacetsWidth;
+    right: @FacetsWidth;
+    top: 10px;
+    bottom: 0px;
+    padding-top: 8px;
+    overflow-x: auto;
+    padding: 5px;
+    a{
+        color: @Primarly;
+    }
+   
+    .loadmore{
+        color: @Primarly;
+        text-align: center;
+        background-color: @Light;
+        padding-bottom: 5px;
+        padding-top: 5px;
+        cursor: pointer;
+    }
+}
+#RelatedPhrases{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    width: @FacetsWidth;
+    padding-top: 5px;
+}
+.document{
+    font-size: 13px;
+    font-weight: 300;
+    padding: 5px;
+    padding-bottom: 20px;
+    border-bottom: solid 1px #ccc;
+    .business{
+        font-weight: 500;
+        color: @Primarly;
+    }
+    .details{
+        color: @TextLight;
+    }
+    .stars{
+        position: absolute;
+        right: 5px;
+        width: 80px;
+        background-color: white;
+        padding-left: 5px;
+        color: @Primarly;
+        font-size: 12px;
+        text-align: right;
+    }
+}
+
+.legend {
+    height: 20px !important;
+    font-size: 11px;
+    div{
+        display: inline-block;
+        width: 35px;
+        text-align: center;
+        color: white;
+        
+        
+    }
+    label {
+        width: 60px;
+        display: inline-block;
+    }
+}
+
+.facet{
+    min-height: 100px;
+    margin: 15px;
+    box-shadow: 0px 0px 10px #ddd;
+    font-size: 12px;
+    padding: 5px;
+    position: relative;
+    h1{
+        font-size: 14px;
+        font-weight: 500;
+        margin: 0px;
+        border-bottom: solid 1px @Divider;
+    }
+    .line {
+        user-select: none;
+        -moz-user-select: -moz-none;
+       -khtml-user-select: none;
+       -webkit-user-select: none;
+    }
+    .line.selected {
+        background-color: #ccc;
+    }
+}
+.suggestions{
+    h3{
+        margin: 0px;
+    }
+    .title{
+        font-weight: bold;
+    }
+    .opt{
+        color: @Primarly;
+        text-decoration: underline;
+        cursor: pointer;
+        
+    }
+    min-height: 10px;
+}
+.facet-provider{
+    table{
+        margin-top: -5px;
+        table-layout:fixed;
+        overflow: hidden;
+        
+    }
+    td{
+        border-bottom: solid 1px @Divider;
+        height: 10px;
+        overflow: hidden;
+    }
+    th{
+        padding-top: 5px;
+        cursor: pointer;
+        font-size: 11px;
+    }
+    .label{
+        text-align: left;
+        user-select: none;
+        -moz-user-select: -moz-none;
+       -khtml-user-select: none;
+       -webkit-user-select: none;
+    }
+    .bar{
+        margin: 0px;
+        padding: 0px;
+        
+    }
+    .barBase{
+        height: 30px;
+        width: 30px;
+        margin-top: 2px;
+        position: relative;
+        background-color: @Light;
+        text-align: center;
+    }
+    .barValue{
+        position: absolute;
+        background-color: @Primarly;
+    }
+    .valueHeader{
+        width: 40px;
+    }
+    .base{
+        max-height: 200px;
+        overflow-x: auto;
+        
+    }
+    h1{
+        span{
+            font-size: 12px;
+            padding-left: 5px;
+        }
+    }
+    .maxFacet{
+        position: absolute;
+        div{
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            margin-left: 15px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+    }
+}
+
+.facet-numReviews {
+    table{
+        margin-top: -5px;
+    }
+    th{
+        padding-top: 5px;
+    }
+    .label{
+        text-align: right;
+    }
+    .bar{
+        width: 75px;
+    }
+    .barBase{
+        height: 9px;
+        margin-top: 2px;
+        background-color: @Light;
+    }
+    .barValue{
+       height: 9px;
+        background-color: @Primarly;
+        margin-top: -9px;
+    }
+    .value{
+        padding-left: 5px;
+    }
+    .footer{
+        td{
+            font-size: 9px;
+            text-align: right;
+            padding-right: 3px;
+        }
+        .maxValue{
+            border-right: solid 1px @Text;
+        }
+    }
+}
+
+.facet-rating {
+    
+    table{
+        margin-top: -5px;
+    }
+    th{
+        padding-top: 5px;
+    }
+    .label{
+        text-align: right;
+    }
+    .bar{
+        width: 75px;
+    }
+    .barBase{
+        height: 9px;
+        margin-top: 2px;
+        background-color: @Light;
+    }
+    .barValue{
+       height: 9px;
+        background-color: @Primarly;
+        margin-top: -9px;
+    }
+    .value{
+        padding-left: 5px;
+    }
+    .footer{
+        td{
+            font-size: 9px;
+            text-align: right;
+            padding-right: 3px;
+        }
+        .maxValue{
+            border-right: solid 1px @Text;
+        }
+    }
+}
+
+#documentDetailView{
+    position: fixed;
+    z-index: 110;
+    top:0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background-color: rgba(255, 255, 255, 0.76);
+    font-size: 14px;
+    .window{
+        position: absolute;
+        padding: 10px;
+        top: 100px;
+        bottom: 100px;
+        left: 100px;
+        right: 100px;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 5px 5px 10px #aaa;
+        border: solid 1px #ccc;
+        h1{
+            margin: 0px;
+            padding: 0px;
+            border-bottom: solid 1px #ccc;
+            font-size: 20px;
+            font-weight: 300;
+            color: @Primarly;
+            a{
+                position: absolute;
+                right: 10px;
+                font-size: 14px;
+                color: #ff0000;
+                cursor: pointer;
+            }
+        }
+        h2{
+            color: #777;
+            font-size: 16px;
+            font-weight: 300;
+            background-color: #eee;
+            
+        }
+        .details{
+            position: absolute;
+            padding-left: 10px;
+            padding-right: 10px;
+            top: 50px;
+            left: 10px;
+            width: 400px;
+            bottom: 10px;
+            overflow: auto;
+            border: solid 1px #ccc;
+            box-shadow: 0px 0px 5px #ccc inset; 
+            table{
+                width: 390px;
+                th{
+                    width: 120px;
+                    text-align: right;
+                    padding-right: 5px;
+                    font-weight: 400;
+                }
+                td{
+                    color: #555;
+                    font-weight: 300;
+                }
+            }
+        }
+        .text{
+            position: absolute;
+            padding-left: 20px;
+            top: 50px;
+            left: 430px;
+            right: 10px;
+            bottom: 10px;
+            overflow: auto;
+            font-weight: 300;
+            font-size: 16px;
+            button{
+                margin-top: 10px;
+                background-color: @Light;
+                color: @Primarly;
+                border: none;
+            }
+            button:disabled {
+                color: @Disabled;
+            }
+        }
+        
+    }
+}
+
+#caseView{
+    position: fixed;
+    right: 0px;
+    top: 0px;
+    width: 300px;
+    z-index: 100;
+    cursor: pointer;
+    .toolBar{
+        height: 20px;
+        padding: 10px;
+        color: @Primarly;
+        width: 200px;
+        position: absolute;
+        right: 0px;
+        background-color: @Light;
+        transition: all 0.2s;
+        
+        i{
+            position: absolute;
+            right: 10px;
+            top: 12px;
+        }
+        overflow: hidden;
+    }
+    .panel{
+        overflow: auto;
+        max-height: 700px;
+        background-color: @Light + #080808;
+        margin-top: 40px;
+        display: none;
+        box-shadow: 0px 5px 10px #ccc;
+        opacity: 0.95;
+        .subBar{
+            background-color: @Primarly;
+            text-align: right;
+            button {
+                height: 30px;
+                background-color: @Primarly;
+                color: white;
+                width: 30px;
+                border: none;
+                outline: none;
+                display: inline-block;
+                border: none;
+            }
+            button:hover{
+                background-color: @TextLight;
+                cursor: pointer;
+            }
+        }
+        h2{
+            
+            color: @Primarly;
+            font-size: 16px;
+            border-bottom: solid 1px @Primarly;
+            padding: 5px;
+            margin: 0px;
+            margin-top: 10px;
+        }
+        .detail{
+            font-size: 12px;
+            color: @TextLight;
+            em{
+                color: @Text;
+                font-style: normal;
+            }
+        }
+        
+        li{
+            color: @Primarly;
+            position: relative;
+            padding: 3px;
+            padding-left: 5px;
+            button {
+                display: none;
+                visibility: hidden;
+                position: absolute;
+                right: 0px;
+                top: 5px;
+                color: white;
+                background-color: @Primarly;
+                border: none;
+                outline: none;
+                display: inline-block;
+                border: none;
+                font-size: 20px;
+                cursor: pointer;
+            }
+            
+            
+        }
+        li:hover{
+            background-color: @Primarly;
+            color: white;    
+            button{
+                display: block;
+                visibility: visible;
+            }
+            .detail{
+                color: white;
+            }
+            em{
+                color: white;
+            }
+        }
+        .caselist
+        {
+            h2{
+                background-color: @Primarly;
+                color: white;
+            }
+            li{
+                height: 30px;
+            }
+            box-shadow: -0px -5px 10px #ccc;
+            background-color: @Light;
+        }
+        
+    }
+}
+
+#caseView:hover{
+    .panel{
+        display: block;
+    }
+    .toolBar{
+        box-shadow: 0px 0px 10px #ccc;
+        width: 280px;
+    }
+}
+
+
+#configView{
+    position: fixed;
+    left: 538px;
+    top: 5px;
+    z-index: 200;
+    
+    button{
+        height: 30px;
+        background-color: @Primarly;
+        color: white;
+        width: 30px;
+        border: none;
+        outline: none;
+        display: inline-block;
+        border: none;
+    }    
+    .panel{
+        background-color: white;
+        padding: 5px;
+        font-size: 14px;
+        display: none;
+        box-shadow: 0px 5px 20px #989898;
+        background-color: White;
+        opacity: 0.95;
+        max-width: 600px;
+        max-height: 600px;
+        overflow: auto;
+        
+        label {
+            margin-right: 5px;
+        }
+    }
+    h4{
+        margin-bottom: 0px;
+        border-bottom: solid 1px @Divider;
+    }
+    h3{
+        font-size: 16px;
+        margin-bottom: 0px;
+    }
+    hr{
+        border: solid 1px @Divider;
+    }
+    .help{
+        ul{
+            list-style: disc;
+            padding-left: 0px;
+            margin-left: 20px;
+        }
+        em{
+            background-color: @Light;
+            padding: 0px 5px 0px 2px; 
+            font-weight: normal;
+        }
+    }
+
+}
+
+#configView:hover{
+    .panel{
+        display: block;
+    }
+    button{
+        background-color: @Secondary;
+    }
+}
+
+.loading{
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    z-index: 10;
+    background-color: white;
+    opacity: 0.9;
+    border: solid 1px #ccc;
+    text-align: center;
+    padding-top: 50px;
+    font-size: 16px;
+}
+#toolTip{
+    position: fixed;
+    display: none;
+    background: @Light;
+    border: solid 1px #ccc;
+    box-shadow: 0px 5px 10px #ccc;
+    z-index: 500;
+    opacity: 0.95;
+    font-size: 12px;
+    padding: 5px;
+    .bold{
+        font-weight: 500;
+    }
+    color: @Primarly;
+}
