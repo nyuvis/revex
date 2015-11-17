@@ -475,7 +475,7 @@ Tex.controller('texCtrl', function ($scope, es, $sce) {
         es.params({
             //host: "localhost:9500",
             host: "vgc.poly.edu/projects/es-gateway",
-            index: "vitals"
+            index: "vitals2"
         });
         
         if (sessionStorage.getItem("user")) {
