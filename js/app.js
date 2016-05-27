@@ -463,7 +463,7 @@ Tex.controller('texCtrl', function ($scope, es, $sce) {
         es.params({
             //host: "localhost:9500",
             host: "vgc.poly.edu/projects/r2sense",
-            index: "yelp"
+            index: "yelprestaurants"
         });
         
         if (sessionStorage.getItem("user") || true) {
