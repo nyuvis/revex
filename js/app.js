@@ -7,7 +7,7 @@ Tex.controller('texCtrl', function ($scope, es, $sce) {
     'use strict';
     var //host = "localhost:9500",
         host ="vgc.poly.edu/projects/r2sense",
-        index = "yelp";
+        index = "yelprestaurants";
     
     $scope.security = {};
     $scope.data = {};
