@@ -118,3 +118,17 @@ li .caption{
     font-weight: 300;
     font-size: 45px;
 }
+
+.emailInput {
+	font-size: 20px;
+	border: solid 1px #ccc;
+	vertical-align: middle;
+}
+
+button {
+	border: none;
+	background-color: #6A30A3;
+	color: white;
+	height: 26px;
+	
+}
