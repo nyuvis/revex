@@ -1,250 +1,96 @@
-<!DOCTYPE html>
-<html ng-app="Tex">
-<head>
-    <title>RevEx</title>
-    <meta charset="UTF-8">
-    <meta name="description" content="" />
-    <meta name="keywords" content="" />
-    <link rel="shortcut icon" href="images/favico.png" />
-    <link href='vendors/roboto.css' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="vendors/font-awesome.min.css">
-    <link rel="stylesheet" href="css/style.css" />
-    
-    <script src="vendors/angular.min.js"></script>
-    <script src="vendors/angular-sanitize.min.js"></script>
-    <script src="vendors/elasticsearch.angular.min.js"></script>
-    <script src="vendors/d3.min.js"></script>
-    <script src="vendors/topojson.v1.min.js"></script>
-    <script src="vendors/d3.layout.cloud.js"></script>
-    <script src="vendors/papaparse.min.js"></script>
-    <script src="vendors/moment.min.js"></script>
-    <script src="js/states.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/es.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/facets.js"></script>
-</head>
-<body ng-controller="texCtrl" ng-init="init()">
-   <div class="loading" ng-hide="true" id="initialSplash" style="display:block; z-index: 1000; opacity:1">
-      <img src="images/logo.png">{{logged}} <br><br>
-       Password: <input type="password" ng-model="security.password" ng-enter="login()"> <button ng-click="login()">Load</button> <br>
-       <span style="color:red">{{security.status}}</span>
-    </div>
-    <input type="file" id="uploadBox" style="display:none" fileread="vm.uploadme"/>
-    <div id="SearchBar">
-       <ul>
-           <li><img src="images/logo.png" /></li>
-           <li><input ng-enter="setUrl(); changeSearch()" type="search" placeholder="Search" ng-model="filter.search" /></li>
-           <li><button ng-click="setUrl(); changeSearch()" style="cursor: pointer; font-size:16px"><i class="fa fa-search"></i></button></li>
-           <li>
-               <button ng-click="saveState()" style="cursor: pointer; font-size:16px"><i class="fa fa-floppy-o"></i></button>
-           </li>
-           <li style="margin-left: 20px; padding-top: 4px; padding-left: 10px;">
-             <span ng-if="config.minCount > 1" class="filter"><i style="padding-left: 6px" class="fa fa-chevron-right"></i> Min:{{config.minCount}} <div ng-click="removeMin()">Remove</div> </span> 
-              <span ng-repeat="f in filter.filters" class="filter"><i style="padding-left: 6px" class="fa fa-chevron-right"></i> {{f.facet}}:{{f.value.join(",")}} <div ng-click="removeFilter(f, $index)">Remove</div> </span> 
-           </li>
-           
-       </ul>     
-    </div>
-    <div id="Summary">
-        <div class="stats">
-            <h2>Hits: {{data.total}}</h2><br />
-            <label><input type="datetime" ng-model="filter.date.from.desc" style="width: 60px; border:none; border-bottom:solid 1px #ccc"  ng-model-options="{ updateOn: 'blur' }" />  to <input type="datetime" ng-model="filter.date.to.desc" style="width: 60px; border:none; border-bottom:solid 1px #ccc" /></label>
+<html>
+    <head>
+        <link href='https://fonts.googleapis.com/css?family=Josefin+Sans:400,300,700' rel='stylesheet' type='text/css'>
+        <link href="about.css" rel="stylesheet" type="text/css">
+        <title>TextTile</title>
+    </head>
+    <body>
+        <div id="header">
+            <h1>TextTile</h1>
+            <a class="button" href="Demo.html?dataset=whs">Launch Demo</a>
         </div>
-        <div class="histogram">  
-            <div histogram data="data.histogram" filter="filter" loading="loading.histogram"></div>
-        </div>
-        <div class="sort">
-            <label>Sort</label>
-            <select ng-model="filter.sortDocuments" ng-change="changeSort()">
-                <option value="relevance">Relevance</option>
-                <option value="date">Date</option>
-                <option value="date-desc">Date (Desc)</option>
-                <option value="stars">Stars</option>
-                <option value="stars-desc">Stars (Desc)</option>
-            </select>
-            <button>
-                <i class="fa fa-download" ng-click="downloadDocuments()"></i>
-            </button>
-        </div>
-        </ul>
-    </div>
-    <div id="Data">
-        <div id="Facets" >
-           <div class="facet" style="min-height: 10px">
-               <div class="legend">
-                  <label>Count(#)</label>
-                    <div style="background-color:hsl(200, 20%, 80%)">&lt; 5</div>
-                    <div style="background-color:hsl(200, 40%, 70%)">&gt; 5</div>
-                    <div style="background-color:hsl(200, 60%, 60%)">&gt; 50</div>
-                    <div style="background-color:hsl(200, 80%, 50%)">&gt; 500</div>
-                    <div style="background-color:hsl(200, 100%, 40%)">&gt; 5K</div>
+        <div class="content">
+           <div class="page">
+               <h1>TextTile</h1>
+               <div class="text">
+                   An Interactive Visualization Tool for Seamless Exploratory Analysis of Structured Data and Unstructured Text
                </div>
-               <div class="legend">
-                  <label>Percent(%)</label>
-                    <div style="background-color:hsl(200, 20%, 80%)">&lt; 0.1%</div>
-                    <div style="background-color:hsl(200, 40%, 70%)">&gt; 0.1%</div>
-                    <div style="background-color:hsl(200, 60%, 60%)">&gt; 1%</div>
-                    <div style="background-color:hsl(200, 80%, 50%)">&gt; 10%</div>
-                    <div style="background-color:hsl(200, 100%, 40%)">&gt; 50%</div>
-               </div>
-           </div>
-           <div class="facet facet-{{facet.directive}}" facet data="facet" loading="loading.facets" ng-repeat="facet in data.facets | orderBy: 'order'"></div>
-        </div>
-        <div id="RelatedPhrases" style="overflow:auto">
-            <div class="facet suggestions" ng-show="data.suggestions.length > 0">
-              <h3>Did you mean</h3>
-                <ul>
-                    <li ng-repeat="sugg in data.suggestions">
-                       <span class="title">{{sugg.text}} = </span>
-                        <span ng-click="searchFix(sugg.text, op.text)" ng-repeat="op in sugg.options"><span class="opt">{{op.text}}</span>, </span>
-                    </li>
-                </ul>
-            </div>
-            <div class="facet facet-{{facet.directive}}" cloud search="state.search" total="data.total" h="400" data="data.terms" loading="loading.terms"></div>
-            <div class="facet facet-{{facet.directive}}" cloud search="state.search" total="data.total" h="200" data="data.bigrams" loading="loading.bigrams"></div>
-        </div>
-        <div id="DocumentsList">
-           <div class="sortBar" ng-model="sortDocuments">
+               <iframe src="https://player.vimeo.com/video/162758051?title=0&byline=0&portrait=0" width="1000" height="506" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
                
-           </div>
-           <div class="list">
-                <div class="document" ng-repeat="doc in data.documents" ng-click="selectDocument(doc)">
-                    <div class="header">
-                        <span class="business"><a ng-href="{{doc.review.url}}" target="_blank">{{doc.business.name}}</a></span>
-                        <span class="details"> - {{doc.business.category | list}} - {{doc.review.created | date:'MMM dd, yyyy'}}</span>
-                        <span class="stars" ng-bind-html="doc.review.rating | stars"></span>
-                    </div>
-                    <div class="text" ng-bind-html="HTML(doc.text)"></div>
+               <p>
+                   TextTile is a data visualization tool for investigation of datasets and questions that require seamless and flexible analysis of structured data and unstructured text. TextTile is based on real-world data analysis problems gathered through our interaction with a number of domain experts and provides a general purpose solution to such problems. 
+                   The system integrates a set of operations that can interchangeably be applied to the structured as well as to unstructured text part of the data to generate useful data summaries. Such summaries are then organized in visual tiles in a grid layout to allow their analysis and comparison.
+               </p>
+            </div>
+            <div class="page" style="background-color: #fafafa">
+               <div class="box line">
+               <h1>Text + Structured Data</h1>
+                   <div class="text">
+                       <p>
+                        TextTile allows for the seamless exploration of text and unstructured data, all operations and tasks and visualizations in TextTile suports both Text and Structured Data types.
+                       </p>
+                   </div>
                 </div>
-                <div class="loadmore" ng-show="data.documents.length < data.total" ng-click="loadMore()">Load More ...</div>
+               <img src="aboutImgs/TextStructured.png" style="width: 600px" class="shadow">
             </div>
+             <div class="page">
+               <h1>Powerful Operations</h1>
+               <div class="text" style="margin-bottom: 20px; width: 900px">
+                   The system integrates a set of operations that can interchangeably be applied to the structured as well as to unstructured text part of the data to generate useful data summaries.
+                   <br/><img src="aboutImgs/Operations.png" style="width:900px">
+               </div>
+               <ul>
+                   <li>
+                       <span class="caption"><h2 style="margin: 0">Filter</h2></span>
+                       <p>Allows the user to subset the data, focusing only in relevant documents</p>
+                   </li>
+                   <li>
+                       <span class="caption"><h2 style="margin: 0">Split</h2></span>
+                       <p>Split the data in segments, allowing the user to perform comparison between diferent segments.</p>
+                   </li>
+                   <li>
+                       <span class="caption"><h2 style="margin: 0">Summarize</h2></span>
+                       <p>Generate visual summaries of the segments generated by the Split operation.</p>
+                   </li>
+               </ul>
+            </div>
+            <div class="page"  style="background-color: #fafafa">
+               <div class="box line">
+               <h1>Data Type Based <br />Visualizations</h1>
+                   <div class="text">
+                       <p>
+                        When choosing what graphical representation is appropriate for a given data summary, TextTile maximize <b>simplicity</b>, <b>familiarity</b>, <b>intuitiveness</b> and <b>effectiveness</b>, using visualizations based on charts with proven efficacy and widespread adoption, and visual representations that adapt to the specific field type selected by the end-user. 
+                           <p>TextTile uses different representations for the 6 available field types as follows: bar charts for categorical, ordinal and quantitative fields (sorted bars for ordinal and binned for quantitative), line charts for temporal, maps for geographical, and keyword charts for keywords extracted from text.
+                       </p>
+                   </div>
+                </div>
+               <img src="aboutImgs/DataTypes.png" style="width: 600px" class="shadow">
+            </div>
+           
+            <div class="page" style="background-color: #ffffff">
+                <img src="aboutImgs/logo.png" style="width: 400px;">
+                <h2><a href="Demo.html?dataset=whs" style="color: #6A30A3">Explore the Demo</a></h2>
+                <div>
+                    <ul class="credits">
+                        <li>
+                            Cristian Felix<br>
+                            <a href="mailto:cristian.felix@nyu.edu">cristian.felix@nyu.edu</a></li>
+                        
+                        <li>Anshul Pandey<br />
+                            <a href="mailto:anshul.pandey@nyu.edu">anshul.pandey@nyu.edu</a>
+                        </li>
+                        <li>
+                            Enrico Bertini<br />
+                            <a href="mailto:enrico.bertini@nyu.edu">enrico.bertini@nyu.edu</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            
+            
         </div>
-    </div>
-     <div id="documentDetailView" ng-show="state.selectedDocument" >
-        <div class="window" >
-            <h1>{{state.selectedDocument.business.name}}  <a ng-click="state.selectedDocument = undefined">x close</a></h1>
-            <div class="details">
-               <h2>Review</h2>
-               <table>
-                   <tr><th>Date</th><td>{{state.selectedDocument.review.created | date:short}}</td></tr>
-                   <tr><th>Rating</th><td>{{state.selectedDocument.review.rating }}</td></tr>
-                   <tr><th>Url</th><td><a ng-href="{{state.selectedDocument.review.url}}" target="_blank" ng-click="$event.stopPropagation()">Link</a></td></tr>
-               </table>
-                <h2>Business</h2>
-                <table>
-                   <tr><th>Category</th><td>{{state.selectedDocument.business.category | list}}</td></tr>
-                   <tr><th>City</th><td>{{state.selectedDocument.business.city }}</td></tr>
-                   <tr><th>State</th><td>{{state.selectedDocument.business.state }}</td></tr>
-                   <tr><th>Phone</th><td>{{state.selectedDocument.business.phone }}</td></tr>
-                   <tr><th>Avg. Rating</th><td>{{state.selectedDocument.business.rating }}</td></tr>
-                   <tr><th>Review Count</th><td>{{state.selectedDocument.business.review_count }}</td></tr>
-                   <tr><th>Url</th><td><a ng-href="{{state.selectedDocument.business.url}}" target="_blank">Link</a></td></tr>
-               </table>
-    
-                <h2>User</h2>
-                <table>
-                   <tr><th>Name</th><td>{{state.selectedDocument.user.name }}</td></tr>
-                   <tr><th>Gender</th><td>{{state.selectedDocument.user.gender }}</td></tr>
-                   <tr><th>City</th><td>{{state.selectedDocument.user.city }}</td></tr>
-                   <tr><th>State</th><td>{{state.selectedDocument.user.state }}</td></tr>
+    </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/topojson/1.1.0/topojson.min.js"></script>
    
-               </table>
-                
-            </div>
-            <div class="text">
-                <span ng-bind-html="HTML(state.selectedDocument.text)"></span> <br>
-                <button ng-click="saveDocument(state.selectedDocument)" style="cursor: pointer; font-size:16px"> <i class="fa fa-floppy-o"></i> Save Document</button>
-            </div>
-        </div>
-    </div>
-    <div id="configView">
-         <div class="toolBar">
-            <button><i class="fa fa-cog"></i></button>
-        </div>
-        <div class="panel">
-            <ul>
-                <li><label>Min. Count</label><input type="number" ng-enter="loadData()" ng-model="config.minCount"></input></li>
-            </ul>
-            <hr />
-            <div class="help">
-                <h3>Search Query</h3>
-                <h4>Boolean operators</h4>
-                Operators are: 
-                   <ul>
-                       <li><em>+</em> (this term must be present)</li>
-                        <li><em>-</em>  (this term must not be present).</li>
-                </ul>  
-                All other terms are optional. For example, this query:
-                <em>quick brown +fox -news</em>
-                <ul>
-                    <li><em>fox</em> must be present</li>
-                    <li><em>news</em> must not be present</li>
-                    <li><em>quick and brown</em> are optional — their presence increases the relevance</li>
-                </ul>
-                The familiar operators <em>AND</em>, <em>OR</em> and <em>NOT</em> are also supported
-                <h4>Proximity searches</h4>
-                <span>While a phrase query (eg "john smith") expects all of the terms in exactly the same order, 
-                a proximity query allows the specified words to be further apart or in a different order with a number specifying the maximum distance between them: "fox quick"~5</span>
-                <h4>Fuzziness</h4>
-                <span>We can search for terms that are similar to, but not exactly like our search terms, using the “fuzzy” operator: quikc~ brwn~ foks~</span>
-                <h4>Wildcards</h4>
-                <span>Wildcard searches can be run on individual terms, using <em>?</em> to replace a single character, and <em>*</em> to replace zero or more characters: qu?ck bro*</span>
-                <h4>Regular Expressions</h4>
-                <span>Regular expression patterns can be embedded in the query string by wrapping them in forward-slashes <em>("/")</em>:/joh?n(ath[oa]n)/ </span>
-                <h4>Boosting</h4>
-                <span>Use the boost operator <em>^</em> to make one term more relevant than another, For instance, if we want to find all documents about foxes, but we are especially interested in quick foxes: quick^2 fox, </span>
-            </div>
-        </div>
-    </div>
-    <div id="about"><a href="http://enrico.bertini.io/revex">About</a></div>
-    <div id="caseView">
-        <div class="toolBar">
-            Case: {{selectedCase.name}} <i class="fa fa-caret-down"></i>
-        </div>
-        <div class="panel">
-           <div class="subBar">
-            <button><i class="fa fa-plus" ng-click="addCase()"></i></button>
-            <button><i class="fa fa-download" ng-click="downloadCases()"></i></button>
-            <button><i class="fa fa-upload" ng-click="upload()"></i></button>
-           </div>
-           <h2>States</h2>
-            <ul>
-                <li ng-repeat="state in selectedCase.states track by $index" ng-click="loadState(state)">
-                {{state.desc}}
-                    <div class="detail"> {{filtersList(state)}} </div>
-                    <button ng-click="removeState($index); $event.stopPropagation();"><i class="fa fa-trash-o"></i></button>
-                </li>
-            </ul>
-            <h2>Documents</h2>
-            <ul>
-                <li ng-repeat="doc in selectedCase.documents track by $index" ng-click="selectDocument(doc)">{{doc.title}}
-                    <div class="detail"><span ng-repeat="h in doc.details" ng-bind-html="HTML(h)"></span></div>
-                    <button ng-click="removeDoc($index); $event.stopPropagation();"><i class="fa fa-trash-o"></i></button>
-                </li>
-            </ul>
-            <div class="caselist" ng-hide="cases.length <= 1">
-                <h2>Other Cases</h2>
-                <ul class="otherCases">
-                    <li ng-repeat="case in cases track by $index" ng-hide="case.name == selectedCase.name" ng-click="selectCase(case)">{{case.name}}
-                    <button ng-click="removeCase($index); $event.stopPropagation();"><i class="fa fa-trash-o"></i></button>
-                    </li>
-                    
-                </ul>
-            </div>
-        </div>
-    </div>
-    <div id="toolTip">tool tip</div>
-</body>
-<script>
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-61671027-3']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();        
-</script>   
 </html>
